@@ -1,0 +1,118 @@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Patient Record</h5>
+    </div>
+    <div class="card-block">
+        {{#each errors}}
+            <div class="alert alert-danger">{{text}}</div>
+        {{/each}}
+        <form method="post" action="/createRecord" autocomplete="off">
+            <input type="hidden" name="id" value="{{patient._id}}">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">First Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control"  name="firstName" value="{{patient.firstName}}"
+                           placeholder="Type Patient's First Name">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Last Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="lastName" value="{{patient.lastName}}"
+                           placeholder="Type Patient's Last Name">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">E-mail</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="emailAddress" value="{{patient.emailAddress}}"
+                           placeholder="Email">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Patient's Birthdate</label>
+                <div class="col-sm-10">
+
+                    <input type="text" class="form-control" id="datepicker" name="birthDate" value="{{patient.birthDate}}"
+                           placeholder="Type Patient's Birthdate">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Patient's Gender</label>
+                <div class="col-sm-10">
+                    <select name="gender" class="form-control">
+                        <option value="male" {{#ifEquals patient.gender "male"}} selected {{/ifEquals}}>Male</option>
+                        <option value="female" {{#ifEquals patient.gender "female"}} selected {{/ifEquals}}>Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Upload File</label>
+                <div class="col-sm-10">
+                    <input type="hidden" name="nameFile" id="nameFile" value="{{patient.nameFile}}">
+                    <input type="file" class="form-control" accept="image/*" >
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Segmentation of the eye photo</label>
+                <div class="col-sm-10">
+                    <img src="/patient_files/{{patient.nameFile}}" id="image_preview" style="max-width: 100px; max-height: 100px;
+                        {{#ifEquals patient.nameFile ""}} display: none; {{/ifEquals}}">
+                    <button class="btn btn-primary">Segment</button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Diagnosis</label>
+                <div class="col-sm-10">
+                       <textarea rows="5" cols="5" class="form-control" name="diagnosis"
+                                 placeholder="Type Patient's diagnosis">{{patient.diagnosis}}</textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Save</label>
+                <div class="col-sm-10">
+                    <button class="btn btn-primary">Save</button>
+                    <button class="btn btn-primary">Send to the patient</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script type="application/javascript">
+    document.addEventListener("DOMContentLoaded", function (){
+        $('input[type=file]').on('change', function(){
+            if( typeof this.files[0] == 'undefined' ) return;
+
+            var formData = new FormData();
+            var request = new XMLHttpRequest();
+            request.open("POST", "/api/upload-patient-file");
+            formData.append('file', this.files[0] );
+            request.addEventListener("load", function () {
+                let receivedData = JSON.parse(request.response);
+                if(receivedData.file_path) {
+                    $('#image_preview').attr('src', '/' + receivedData.file_path).css("display", "");
+                    $('#nameFile').val(receivedData.filename);
+                } else if(receivedData.error) {
+                    alert(receivedData.error)
+                }
+            });
+            request.send(formData);
+        });
+
+        $( function() {
+            $( "#datepicker" ).datepicker();
+        } );
+    });
+</script>

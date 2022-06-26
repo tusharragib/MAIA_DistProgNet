@@ -1,0 +1,56 @@
+<!-- Pre-loader end -->
+<section class="login p-fixed d-flex text-center">
+    <!-- Container-fluid starts -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- Authentication card start -->
+                <div class="login-card card-block auth-body mr-auto ml-auto">
+                    {{#each errors}}
+                        <div class="alert alert-danger">{{text}}</div>
+                    {{/each}}
+                    <form class="md-float-material" action="authenticate" method="post">
+                        <div class="text-center">
+                            <a href="/">
+                                <img src="img/logo.png" alt="logo.png">
+                            </a>
+                        </div>
+                        <div class="auth-box">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-left txt-primary">Sign In</h3>
+                                </div>
+                            </div>
+                            <hr/>
+
+                            <div class="input-group">
+                                <input type="username" name="emailAddress" value="{{user.emailAddress}}"
+                                       class="form-control" placeholder="Your E-mail">
+                                <span class="md-line"></span>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" name="password" value="{{user.password}}"
+                                       class="form-control" placeholder="Password">
+                                <span class="md-line"></span>
+                            </div>
+
+                            <div class="row m-t-30">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
+                                </div>
+                            </div>
+                            <hr/>
+
+
+                        </div>
+                    </form>
+                    <!-- end of form -->
+                </div>
+                <!-- Authentication card end -->
+            </div>
+            <!-- end of col-sm-12 -->
+        </div>
+        <!-- end of row -->
+    </div>
+    <!-- end of container-fluid -->
+</section>

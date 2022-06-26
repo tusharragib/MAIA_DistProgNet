@@ -1,0 +1,86 @@
+<div class="card">
+    <div class="card-header">
+        <h5>Patients list</h5>
+        <div class="card-header-right">
+            <ul class="list-unstyled card-option">
+                <li><i class="icofont icofont-simple-left "></i></li>
+                <li><i class="icofont icofont-maximize full-card"></i></li>
+                <li><i class="icofont icofont-minus minimize-card"></i></li>
+                <li><i class="icofont icofont-refresh reload-card"></i></li>
+                <li><i class="icofont icofont-error close-card"></i></li>
+            </ul>
+        </div>
+    </div>
+    <style>
+        #fixed {table-layout:fixed; width:1300px;word-wrap: break-word;}/*Setting the table width is important!*/
+
+    </style>
+    <div class="card-block table-border-style">
+        <div class="table-responsive">
+            <form action="/api/patient" method="get">
+            <table class="table"  id = 'fixed'>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>E-mail</th>
+                        <th>Birthdate</th>
+                        <th>Gender</th>
+                        <th>File name</th>
+                        <th>Diagnosis</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{#each patientsList}}
+                    <tr>
+                        <th>{{@index}}</th>
+                        <th>{{this._doc.firstName}}</th>
+                        <th>{{this._doc.lastName}}</th>
+                        <th>{{this._doc.emailAddress}}</th>
+                        <th>{{this._doc.birthDate}}</th>
+                        <th>{{this._doc.gender}}</th>
+                        <th>
+                            {{#if this._doc.nameFile}}
+                                <img src="/patient_files/{{this._doc.nameFile}}" id="image_preview" style="max-width: 100px; max-height: 100px;"/>
+                            {{/if}}
+                        </th>
+                        <th>{{this._doc.diagnosis}}</th>
+                        <td>
+                            <a class="btn btn-primary btn-block mb-3" href="/editRecord/{{this._doc._id}}">
+                                <img src="img/modify_icon.png" height="20" width="auto">
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-block mb-3" href="javascript:;" onclick="deletePatient('{{this._doc._id}}')">
+                                <img src="img/remove_icon.png" height="20" width="auto">
+                            </a>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function deletePatient(id) {
+        if(confirm('Are you sure?')) {
+            let request = new XMLHttpRequest();
+            request.open("DELETE", "/api/deletePatient/" + id, true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.addEventListener("load", function () {
+                let receivedData = JSON.parse(request.response);
+                if(receivedData.result == "success") {
+                    location.reload();
+                }
+            });
+            request.send();
+        }
+    }
+</script>

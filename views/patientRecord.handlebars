@@ -1,0 +1,22 @@
+<div class="card">
+    <div class="card-header">
+        <h5>Patient's Record</h5>
+
+
+    </div>
+    <div class="card-block">
+        <div class="card-header">
+
+        </div>
+        <div class="card-block">
+            <p>First name: <b>{{patient._doc.firstName}}</b></p>
+            <p>Last name: <b>{{patient._doc.lastName}}</b></p>
+            <p>E-mail: <b>{{patient._doc.emailAddress}}</b></p>
+            <p>Birth Date: <b>{{patient._doc.birthDate}}</b></p>
+            <p>Gender: <b>{{patient._doc.gender}}</b></p>
+            <p>Diagnosis: <b>{{patient._doc.diagnosis}}</b></p>
+            <p><img src="/patient_files/{{patient._doc.nameFile}}" id="image_preview" style="max-width: 100px; max-height: 100px;
+                {{#ifEquals patient.nameFile ""}} display: none; {{/ifEquals}}"></p>
+        </div>
+    </div>
+</div>
